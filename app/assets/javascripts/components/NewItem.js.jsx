@@ -14,7 +14,6 @@ class NewItem extends React.Component {
       this.props.addItem(item);
       this.refs.addItem.reset();
     }).fail( data => {
-      debugger
       alert('Fail. FAIL. FAIL!!!!!!');
     })
 

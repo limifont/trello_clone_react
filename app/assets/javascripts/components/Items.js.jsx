@@ -23,7 +23,6 @@ class Items extends React.Component {
   }
 
   deleteItem(id) {
-      debugger
     $.ajax({
       url: `/boards/${this.props.boardId}/lists/${this.props.listId}/items/${id}`,
       type: 'DELETE',

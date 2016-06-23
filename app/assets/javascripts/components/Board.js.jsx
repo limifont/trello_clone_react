@@ -14,7 +14,7 @@ class Board extends React.Component {
                 <p>{this.props.description}</p>
               </div>
               <div className="card-action">
-                <button className="btn card-btn" onClick="">Edit</button>
+                <button className="btn card-btn" onClick={() => this.props.toggleEdit(this.props)}>Edit</button>
                 <button className="btn pink card-btn" onClick={() => this.props.deleteBoard(this.props.id)}>Delete</button>
               </div>
             </div>
