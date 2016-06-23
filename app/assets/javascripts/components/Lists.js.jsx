@@ -3,7 +3,8 @@ class Lists extends React.Component {
     super(props)
     this.state = { lists: [], show: false  };
     this.deleteList = this.deleteList.bind(this);
-    this.showList = this.showList.bind(this)
+    this.showList = this.showList.bind(this);
+    this.listBack = this.listBack.bind(this);
 
   }
 
@@ -18,6 +19,10 @@ class Lists extends React.Component {
       // TODO: Handle this better!
       alert('Failed grabbing board lists.');
     });
+  }
+
+  listBack() {
+    this.setState({ show: false })
   }
 
   showList(list) {
@@ -35,7 +40,7 @@ class Lists extends React.Component {
       type: 'DELETE',
       dataType: 'JSON'
     }).done( data => {
-      let lists = this.state.lists
+      let lists = this.state.lists;
       let index = lists.findIndex( l => l.id === id);
       this.setState({
         lists: [
@@ -50,17 +55,32 @@ class Lists extends React.Component {
 
   render() {
     let lists = this.state.lists.map( list => {
-      return(<List key={`list-${list.id}`} {...list} deleteList={this.deleteList} />)
+      return(<List key={`list-${list.id}`} {...list} deleteList={this.deleteList} showList={this.showList} />)
     });
-    return(
-      <div>
-        <NewList boardId={this.props.boardId} addList={this.addList.bind(this)}/>
-        <br />
-        <div className="row">
-          {lists}
+    
+    if(this.state.show){
+      return(
+        <div>
+          <h3>{this.state.list.name}</h3>
+          <br />
+          <br />
+          <button className="btn" onClick={this.listBack}>SHOW ALL LISTS</button>
+          <hr />
+          <Items boardId={this.props.boardId} listId={this.state.list.id} />
         </div>
-      </div>
-    )
+      )
+    } else {
+      return(
+        <div>
+          <NewList boardId={this.props.boardId} addList={this.addList.bind(this)}/>
+          <br />
+          <div className="row">
+            {lists}
+          </div>
+        </div>
+      )
+      
+    }
 
   }
 }
