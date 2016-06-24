@@ -1,20 +1,28 @@
 class Boards extends React.Component {
   constructor(props) {
       super(props);
-      this.state = { boards: props.boards, show: false, edit: false };
-      this.toggleEdit = this.toggleEdit.bind(this);
+      this.state = { boards: props.boards, show: false };
       this.updateBoard = this.updateBoard.bind(this);
       this.deleteBoard = this.deleteBoard.bind(this);
       this.showBoard = this.showBoard.bind(this);
       this.boardBack = this.boardBack.bind(this);
   }
 
-  toggleEdit(board) {
-    this.setState({ edit: !this.state.edit, board });
-  }
-
-  updateBoard() {
-    //TODO
+  updateBoard(id, board) {
+    $.ajax({
+      url: `/boards/${id}`,
+      type: 'PUT',
+      data: { board: {...board} },
+      dataType: 'JSON'
+    }).done( board => {
+      let boards = this.state.boards;
+      let editBoard = boards.find( b => b.id === board.id );
+      editBoard.name = board.name;
+      editBoard.description = board.description;
+      this.setState({ boards: boards });
+    }).fail( response => {
+      alert(response.errors.toString());
+    });
   }
 
   showBoard(board) {
@@ -64,16 +72,9 @@ class Boards extends React.Component {
           <Lists boardId={this.state.board.id} />
         </div>
       )
-    } else if(this.state.edit){
-      return(
-        <div>
-          <i>YES</i>
-          <button className="btn" onClick={() => this.toggleEdit(this.props)}>Back</button>
-        </div>
-      )
     } else {
       let boards = this.state.boards.map( board => {
-        return(<Board key={`board-${board.id}`} {...board} deleteBoard={this.deleteBoard} showBoard={this.showBoard} toggleEdit={this.toggleEdit} />)
+        return(<Board key={`board-${board.id}`} {...board} deleteBoard={this.deleteBoard} showBoard={this.showBoard} updateBoard={this.updateBoard} />)
       });
 
       return(
